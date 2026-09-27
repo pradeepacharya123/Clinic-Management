@@ -20,7 +20,9 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 SECRET_KEY = env('SECRET_KEY')  
 DEBUG = env.bool('DEBUG', default=True) #true development mode , false production mode
 ALLOWED_HOSTS = ['*']  #allow all domains to access your app , not safe for production
-
+CSRF_TRUSTED_ORIGINS = [
+    'https://clinic-management-production-4849.up.railway.app',
+]
 # -------------------------------------------------------
 # Installed Apps
 # -------------------------------------------------------
