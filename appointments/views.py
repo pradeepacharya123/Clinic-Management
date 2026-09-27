@@ -7,28 +7,27 @@ from .forms import AppointmentForm
 
 @login_required
 def appointment_list(request):
-    # Filter by status if requested
     status = request.GET.get('status', '')
-    if status:
+
+    if request.user.role == 'doctor':
         appointments = Appointment.objects.filter(
-            status=status
+            doctor__user=request.user
         ).select_related('patient', 'doctor__user')
     else:
         appointments = Appointment.objects.select_related(
             'patient', 'doctor__user'
         ).all()
 
-    # Using sets — get unique statuses for filter dropdown
-    all_statuses = list(
-        Appointment.STATUS_CHOICES
-    )
+    if status:
+        appointments = appointments.filter(status=status)
+
+    all_statuses = list(Appointment.STATUS_CHOICES)
 
     return render(request, 'appointments/list.html', {
         'appointments': appointments,
         'all_statuses': all_statuses,
-        'selected'    : status
+        'selected': status
     })
-
 
 @login_required
 def appointment_add(request):
